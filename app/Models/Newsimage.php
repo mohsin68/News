@@ -11,7 +11,6 @@ class Newsimage extends Model
     protected $fillable = [
         'id',
         'name',
-        'news_i_id',
         'created_at',
         'updated_at'
     ];
@@ -19,7 +18,5 @@ class Newsimage extends Model
         'created_at',
         'updated_at'
     ];
-    public function news(){
-        return $this->BelongsTo('App\Models\News', 'news_i_id', 'id');
-    }
+
 }

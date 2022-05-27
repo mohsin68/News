@@ -11,27 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class WordsController extends Controller
 {
     use AllTrait;
-    public function store(Request $request){
-        try{
-            //validation
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|max:191',
-                'news_w_id' => 'required|integer'
-            ]);
 
-            if ($validator->fails()) {
-                return $this->returnError(422, 'sorry this is an error in validation', 'Error', $validator->errors());
-            }
-            Word::create([
-                'name' => $request->name,
-                'news_w_id' => $request->news_w_id
-            ]);
-            return $this->returnSuccess(200, 'this word is added succssfuly' );
-
-        }catch(\Exception $ex){
-            return $this->returnError(422, 'sorry this is an error');
-        }
-    }
     public function getAll($id){
         try{
             $word = Word::select("*")->where('news_w_id', $id)->get();

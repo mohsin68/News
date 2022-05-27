@@ -24,7 +24,7 @@ class NewsimagesController extends Controller
                 return $this->returnError(422, 'sorry this is an error', 'Error', $validator->errors());
             }
             // save photo in folder
-                        // insert into db 
+            // insert into db 
             if($request->hasFile('name')){
                 foreach($request->name as $src){
                     $file_extentions = $src->getClientOriginalExtension();
@@ -32,10 +32,12 @@ class NewsimagesController extends Controller
                     $src->move("newsimages", $file_name);
                     Newsimage::create([
                         'name' => $file_name,
-                        'news_i_id' => $request->news_i_id
                     ]);
+                    //get count of data in input name
+                    $lastImgAdded=count($request->name);
+                    $newsimg = Newsimage::select("id")->latest('id')->take($lastImgAdded)->get();
                 }
-                return $this->returnSuccess(200, 'photo is added succssfuly' );
+                return $this->returnSuccess(200, 'photo is added succssfuly', 'data',  $newsimg);
 
 
             }
@@ -45,7 +47,7 @@ class NewsimagesController extends Controller
             return $this->returnError(422, 'sorry this is an error');
         }
     }
-    public function getAll($id){
+    /*public function getAll($id){
         try{
             $newsimg = Newsimage::select("*")->where('news_i_id', $id)->get();
             if($newsimg->count() >= 1){
@@ -57,7 +59,7 @@ class NewsimagesController extends Controller
         catch(\Exception $ex){
             return $this->returnError(422, 'sorry this is an error');
         }
-    }
+    }*/
     public function destroy($id){
         try{
             $newsimg = Newsimage::find($id);

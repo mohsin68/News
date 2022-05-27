@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Sources extends Migration
+class Idimages extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class Sources extends Migration
      */
     public function up()
     {
-        Schema::create('sources', function (Blueprint $table) {
+        Schema::create('idimages', function (Blueprint $table) {
             $table->id();
-            $table->text('sourcelinks');
-            $table->integer('news_s_id');
+            $table->integer('id_image');
+            $table->integer('news_i_id');
             $table->timestamps();
         });
     }

@@ -11,27 +11,6 @@ use Illuminate\Support\Facades\Validator;
 class SourceController extends Controller
 {
     use AllTrait;
-    public function store(Request $request){
-        try{
-            //validation
-            $validator = Validator::make($request->all(), [
-                'links' => 'required|url',
-                'news_s_id' => 'required|integer'
-            ]);
-
-            if ($validator->fails()) {
-                return $this->returnError(422, 'sorry this is an error in validation', 'Error', $validator->errors());
-            }
-            Source::create([
-                'links' => $request->links,
-                'news_s_id' => $request->news_s_id
-            ]);
-            return $this->returnSuccess(200, 'this source is added succssfuly' );
-
-        }catch(\Exception $ex){
-            return $this->returnError(422, 'sorry this is an error');
-        }
-    }
         public function getAll($id){
         try{
             $source = Source::select("*")->where('news_s_id', $id)->get();

@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Word extends Model
+class Idimage extends Model
 {
-    protected $table = 'words';
+    protected $table = 'idimages';
     protected $fillable = [
         'id',
-        'wordname',
-        'news_w_id',
+        'id_image',
+        'news_i_id',
         'created_at',
         'updated_at'
     ];
@@ -20,6 +20,6 @@ class Word extends Model
         'updated_at'
     ];
     public function news(){
-        return $this->BelongsTo('App\Models\News', 'news_w_id', 'id');
+        return $this->BelongsTo('App\Models\News', 'news_i_id', 'id');
     }
 }

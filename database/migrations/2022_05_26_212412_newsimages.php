@@ -16,7 +16,6 @@ class Newsimages extends Migration
         Schema::create('newsimages', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->integer('news_i_id');
             $table->timestamps();
         });
     }

@@ -22,6 +22,7 @@ class News extends Migration
             $table->boolean('status')->default(0)->comment('0=>news 1=>article ');
             $table->boolean('const')->default(0)->comment('0=>nonconst 1=>const ');
             $table->integer('governorate_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

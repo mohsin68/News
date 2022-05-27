@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Gallary extends Model
 {
-    use HasFactory;
     protected $table = 'gallary';
     protected $fillable = [
         'id',

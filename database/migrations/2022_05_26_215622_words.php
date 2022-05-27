@@ -15,7 +15,7 @@ class Words extends Migration
     {
         Schema::create('words', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('wordname');
             $table->integer('news_w_id');
             $table->timestamps();
         });
