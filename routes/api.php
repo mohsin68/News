@@ -87,9 +87,11 @@ Route::group(['namespace'=>'App\Http\Controllers'], function(){
         #################start source ##############
         Route::get('getallsources/{id}', 'SourceController@getAll');
         ################### end source #############
-        ################### start Idimages###############
-        Route::post('createidimages', 'IdimageController@store');
-        ################### start Idimages###############
+        #################start newsImages ##############
+        Route::get('getAllNewsImages/{id}', 'NewsimagesController@getAll');
+        ################### end newsImages #############
+        
+
     });
 
     

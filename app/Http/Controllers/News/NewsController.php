@@ -11,6 +11,7 @@ use App\Models\Idimage;
 use App\Models\Source;
 use App\Models\Newsimage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Arr;
 
 class NewsController extends Controller
 {
@@ -20,12 +21,12 @@ class NewsController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|max:191',
                 'desc' => 'required',
-                'user' => 'required|max:191',
-                'link' => 'required|url',
-                'governorate_id' => 'required|integer',
-                'wordname' => 'required|max:191',
-                'sourcelinks' => 'required|array',
-                'sourcelinks.*' => 'required|url',
+                'user' => 'max:191',
+                'link' => 'url',
+                'governorate_id' => 'integer',
+                'wordname' => 'max:191',
+                'sourcelinks' => 'array',
+                'sourcelinks.*' => 'url',
                 'id_image' => 'required',
                 'id_image.*' => 'required|integer',
             ]);
@@ -79,14 +80,14 @@ class NewsController extends Controller
                 $validator = Validator::make($request->all(), [
                     'name' => 'required|max:191',
                     'desc' => 'required',
-                    'user' => 'required|max:191',
-                    'link' => 'required|url',
-                    'governorate_id' => 'required|integer',
-                    'wordname' => 'required|max:191',
-                    'sourcelinks' => 'required|array',
-                    'sourcelinks.*' => 'required|url',
+                    'user' => 'max:191',
+                    'link' => 'url',
+                    'governorate_id' => 'integer',
+                    'wordname' => 'max:191',
+                    'sourcelinks' => 'array',
+                    'sourcelinks.sourcelinks' => 'url',
                     'id_image' => 'required',
-                    'id_image.*' => 'required|integer',
+                    'id_image.*' => 'required',
                 ]);
     
                 if ($validator->fails()) {
@@ -103,22 +104,48 @@ class NewsController extends Controller
             ]);
             $words = $request->wordname;
             foreach ($words as $word){
-                $news->words()->update([
-                    'wordname' => $word,
+                if(Arr::has($word,'id')){
+                    $news->words()->where('id', $word['id'])->update([
+                        'wordname' => $word['wordname'],
+                    ]);
+                }else{
+                 Word::create([
+                    'wordname' => $word['wordname'],
+                    'news_w_id' => $id
                 ]);
+
+                }
+
             }
             $sources = $request->sourcelinks;
             foreach ($sources as $source){
-                $news->source()->update([
-                    'sourcelinks'=> $source,
-                    
+                if(Arr::has($source,'id')){
+                    $news->source()->where('id', $source['id'])->update([
+                        'sourcelinks' => $source['sourcelinks'],
+                    ]);
+                }else{
+                Source::create([
+                    'sourcelinks' => $source['sourcelinks'],
+                    'news_s_id' => $id
                 ]);
+
+                }
+
             }
+
             $idImgArrs = $request->id_image;
-            foreach($idImgArrs as $idImgArr){
-                $news->idimage()->update([
-                    'id_image' => $idImgArr,
+            foreach ($idImgArrs as $idImgArr){
+                if(Arr::has($idImgArr,'id')){
+                    $news->idimage()->where('id', $idImgArr['id'])->update([
+                        'id_image' => $idImgArr['id_image'],
+                    ]);
+                }else{
+                Idimage::create([
+                    'id_image' => $idImgArr['id_image'],
+                    'news_i_id' => $id
                 ]);
+
+                }
 
             }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\AllTrait;
 use App\Models\Newsimage;
+use App\Models\News;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -47,19 +48,32 @@ class NewsimagesController extends Controller
             return $this->returnError(422, 'sorry this is an error');
         }
     }
-    /*public function getAll($id){
+    public function getAll($id){
         try{
-            $newsimg = Newsimage::select("*")->where('news_i_id', $id)->get();
-            if($newsimg->count() >= 1){
-                return $this->returnData(200, 'there is all images', $newsimg);
+            $news = News::find($id);
+            if(!$news){
+                return $this->returnError(422, 'sorry this is not exists');
             }
-            return $this->returnError(422, 'sorry this is not exists');
+            $getID = $news->with(['idimage' => function($q){
+                $q->select('id_image', 'news_i_id');
+            }])->where('id', $id)->first();
+            $imagesID = $getID->idimage;
+            $arrImg = array();
+            foreach ($imagesID as $imageID){
+                $allimages = Newsimage::select('*')->where('id', $imageID->id_image)->get();
+                array_push($arrImg, $allimages);
+            }
+            if(count($arrImg) > 0){
+                return $this->returnData(200, 'there is all images', $arrImg);
+            }else{
+                return $this->returnError(422, 'sorry this is no image in this new');
+            }
 
         }
         catch(\Exception $ex){
             return $this->returnError(422, 'sorry this is an error');
         }
-    }*/
+    }
     public function destroy($id){
         try{
             $newsimg = Newsimage::find($id);

@@ -22,4 +22,7 @@ class Idimage extends Model
     public function news(){
         return $this->BelongsTo('App\Models\News', 'news_i_id', 'id');
     }
+    public function newsImages(){
+        return $this->BelongsTo('App\Models\Newsimage', 'id_image', 'id');
+    }
 }

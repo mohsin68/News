@@ -18,5 +18,8 @@ class Newsimage extends Model
         'created_at',
         'updated_at'
     ];
-
+    //relations
+    public function idImages(){
+        return $this->hasOne('App\Models\Idimage', 'id_image', 'id');
+    }
 }
