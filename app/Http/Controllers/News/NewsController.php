@@ -74,27 +74,26 @@ class NewsController extends Controller
     }
     
     public function update(Request $request, $id){
-        try{
-            $news = News::find($id);
-            if($news){
-                $validator = Validator::make($request->all(), [
-                    'name' => 'required|max:191',
-                    'desc' => 'required',
-                    'user' => 'max:191',
-                    'link' => 'url',
-                    'governorate_id' => 'integer',
-                    'wordname' => 'max:191',
-                    'sourcelinks' => 'array',
-                    'sourcelinks.sourcelinks' => 'url',
-                    'id_image' => 'required',
-                    'id_image.*' => 'required',
-                ]);
-    
-                if ($validator->fails()) {
-                    return $this->returnError(422, 'sorry this is an error in validation', 'Error', $validator->errors());
-                }
-                
+        $news = News::find($id);
+        if($news){
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|max:191',
+                'desc' => 'required',
+                'user' => 'max:191',
+                'link' => 'url',
+                'governorate_id' => 'integer',
+                'wordname' => 'max:191',
+                'sourcelinks' => 'array',
+                'sourcelinks.sourcelinks' => 'url',
+                'id_image' => 'required',
+                'id_image.*' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return $this->returnError(422, 'sorry this is an error in validation', 'Error', $validator->errors());
+            }
             
+        
             $news->update([
                 'name' => $request->name,
                 'desc' => $request->desc,
@@ -109,7 +108,7 @@ class NewsController extends Controller
                         'wordname' => $word['wordname'],
                     ]);
                 }else{
-                 Word::create([
+                Word::create([
                     'wordname' => $word['wordname'],
                     'news_w_id' => $id
                 ]);
@@ -121,11 +120,11 @@ class NewsController extends Controller
             foreach ($sources as $source){
                 if(Arr::has($source,'id')){
                     $news->source()->where('id', $source['id'])->update([
-                        'sourcelinks' => $source['sourcelinks'],
+                        'sourcelinks' => $source['link'],
                     ]);
                 }else{
                 Source::create([
-                    'sourcelinks' => $source['sourcelinks'],
+                    'sourcelinks' => $source['link'],
                     'news_s_id' => $id
                 ]);
 
@@ -151,8 +150,10 @@ class NewsController extends Controller
 
             return $this->returnSuccess(200, 'this News is Updated succssfuly' );
 
-            }
-            return $this->returnError(422, 'sorry this is not exists');
+        }
+        return $this->returnError(422, 'sorry this is not exists');
+
+        try{
 
 
 
