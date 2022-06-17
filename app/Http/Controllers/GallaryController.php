@@ -62,7 +62,7 @@ class GallaryController extends Controller
         try{
             $gallary = Gallary::find($id);
             if($gallary){
-                //delete from file
+                //delete from folder
             $image = Str::afterLast($gallary->name, 'assets/');
             $image = base_path('public\gallary'. '\\' . $image);
             unlink($image); //delete photo from folder

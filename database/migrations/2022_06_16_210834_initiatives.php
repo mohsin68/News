@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Gallary extends Migration
+class Initiatives extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class Gallary extends Migration
      */
     public function up()
     {
-        Schema::create('gallary', function (Blueprint $table) {
+        Schema::create('initiatives', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('employee_id')->nullable();
+            $table->text('desc');
             $table->timestamps();
         });
     }

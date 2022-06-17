@@ -18,8 +18,10 @@ class News extends Model
         'status',
         'user_id',
         'governorate_id',
+        'government_id',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'initiative_id'
     ];
     protected $hidden = [
         'created_at',
@@ -45,5 +47,11 @@ class News extends Model
     }
     public function user(){
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
+    public function initiative(){
+        $this->belongsTo('App\Models\Initiative', 'initiative_id', 'id');
+    }
+    public function government(){
+        $this->belongsTo('App\Models\Government', 'government_id', 'id');
     }
 }

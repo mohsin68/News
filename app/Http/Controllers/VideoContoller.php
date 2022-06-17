@@ -80,8 +80,7 @@ class VideoContoller extends Controller
             return $this->returnError(422, 'sorry this id not exists');
 
         }catch(\Exception $ex){
-            return $ex;
-            //return $this->returnError(422, 'sorry this is an error');
+            return $this->returnError(422, 'sorry this is an error');
 
         }
     }

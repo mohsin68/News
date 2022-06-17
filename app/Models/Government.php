@@ -5,22 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Gallary extends Model
+class Government extends Model
 {
-    protected $table = 'gallary';
+    protected $table= 'governments';
     protected $fillable = [
         'id',
         'name',
-        'employee_id',
+        'registration_status',
         'created_at',
         'updated_at'
     ];
     protected $hidden = [
         'created_at',
-        'updated_at'
+        'updated_at'  
     ];
-    // relations
+    //relations 
+    public function news(){
+        return $this->hasMany('App\Models\News', 'government_id', 'id');
+    }
     public function employee(){
-        return $this->belongsTo('App\Models\Employee', 'employee_id', 'id');
+        return $this->hasMany('App\Models\Employee', 'government_id', 'id');
     }
 }

@@ -29,6 +29,8 @@ class NewsController extends Controller
                 'sourcelinks.*' => 'url',
                 'id_image' => 'required',
                 'id_image.*' => 'required|integer',
+                'initiative_id' => 'integer',
+                'government_id' => 'integer'
             ]);
 
             if ($validator->fails()) {
@@ -40,7 +42,9 @@ class NewsController extends Controller
                 'user' => $request->user,
                 'link' => $request->link,
                 'governorate_id' => $request->governorate_id,
-                'user_id' => auth()->user()->id
+                'user_id' => auth()->user()->id,
+                'initiative_id' => $request->initiative_id,
+                'government_id' => $request->government_id
             ]);
             $lastNewOfUser = News::select('*')->where('user_id' , auth()->user()->id)->latest('id')->first();
             $words = $request->wordname;
@@ -74,92 +78,93 @@ class NewsController extends Controller
     }
     
     public function update(Request $request, $id){
-        $news = News::find($id);
-        if($news){
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|max:191',
-                'desc' => 'required',
-                'user' => 'max:191',
-                'link' => 'url',
-                'governorate_id' => 'integer',
-                'wordname' => 'max:191',
-                'sourcelinks' => 'array',
-                'sourcelinks.sourcelinks' => 'url',
-                'id_image' => 'required',
-                'id_image.*' => 'required'
-            ]);
-
-            if ($validator->fails()) {
-                return $this->returnError(422, 'sorry this is an error in validation', 'Error', $validator->errors());
-            }
-            
-        
-            $news->update([
-                'name' => $request->name,
-                'desc' => $request->desc,
-                'user' => $request->user,
-                'link' => $request->link,
-                'governorate_id' => $request->governorate_id,
-            ]);
-            $words = $request->wordname;
-            foreach ($words as $word){
-                if(Arr::has($word,'id')){
-                    $news->words()->where('id', $word['id'])->update([
-                        'wordname' => $word['wordname'],
-                    ]);
-                }else{
-                Word::create([
-                    'wordname' => $word['wordname'],
-                    'news_w_id' => $id
-                ]);
-
-                }
-
-            }
-            $sources = $request->sourcelinks;
-            foreach ($sources as $source){
-                if(Arr::has($source,'id')){
-                    $news->source()->where('id', $source['id'])->update([
-                        'sourcelinks' => $source['link'],
-                    ]);
-                }else{
-                Source::create([
-                    'sourcelinks' => $source['link'],
-                    'news_s_id' => $id
-                ]);
-
-                }
-
-            }
-
-            $idImgArrs = $request->id_image;
-            foreach ($idImgArrs as $idImgArr){
-                if(Arr::has($idImgArr,'id')){
-                    $news->idimage()->where('id', $idImgArr['id'])->update([
-                        'id_image' => $idImgArr['id_image'],
-                    ]);
-                }else{
-                Idimage::create([
-                    'id_image' => $idImgArr['id_image'],
-                    'news_i_id' => $id
-                ]);
-
-                }
-
-            }
-
-            return $this->returnSuccess(200, 'this News is Updated succssfuly' );
-
-        }
-        return $this->returnError(422, 'sorry this is not exists');
-
         try{
 
-
+            $news = News::find($id);
+            if($news){
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required|max:191',
+                    'desc' => 'required',
+                    'user' => 'max:191',
+                    'link' => 'url',
+                    'governorate_id' => 'integer',
+                    'wordname' => 'max:191',
+                    'sourcelinks' => 'array',
+                    'sourcelinks.sourcelinks' => 'url',
+                    'id_image' => 'required',
+                    'id_image.*' => 'required',
+                    'initiative_id' => 'integer',
+                    'government_id' => 'integer'
+                ]);
+    
+                if ($validator->fails()) {
+                    return $this->returnError(422, 'sorry this is an error in validation', 'Error', $validator->errors());
+                }
+                
+            
+                $news->update([
+                    'name' => $request->name,
+                    'desc' => $request->desc,
+                    'user' => $request->user,
+                    'link' => $request->link,
+                    'governorate_id' => $request->governorate_id,
+                    'initiative_id' => $request->initiative_id,
+                    'government_id' => $request->government_id
+                ]);
+                $words = $request->wordname;
+                foreach ($words as $word){
+                    if(Arr::has($word,'id')){
+                        $news->words()->where('id', $word['id'])->update([
+                            'wordname' => $word['wordname'],
+                        ]);
+                    }else{
+                    Word::create([
+                        'wordname' => $word['wordname'],
+                        'news_w_id' => $id
+                    ]);
+    
+                    }
+    
+                }
+                $sources = $request->sourcelinks;
+                foreach ($sources as $source){
+                    if(Arr::has($source,'id')){
+                        $news->source()->where('id', $source['id'])->update([
+                            'sourcelinks' => $source['link'],
+                        ]);
+                    }else{
+                    Source::create([
+                        'sourcelinks' => $source['link'],
+                        'news_s_id' => $id
+                    ]);
+    
+                    }
+    
+                }
+    
+                $idImgArrs = $request->id_image;
+                foreach ($idImgArrs as $idImgArr){
+                    if(Arr::has($idImgArr,'id')){
+                        $news->idimage()->where('id', $idImgArr['id'])->update([
+                            'id_image' => $idImgArr['id_image'],
+                        ]);
+                    }else{
+                    Idimage::create([
+                        'id_image' => $idImgArr['id_image'],
+                        'news_i_id' => $id
+                    ]);
+    
+                    }
+    
+                }
+    
+                return $this->returnSuccess(200, 'this News is Updated succssfuly' );
+    
+            }
+            return $this->returnError(422, 'sorry this is not exists');
 
         }catch(\Exception $ex){
-            return $ex;
-            //return $this->returnError(422, 'sorry this is an error');
+            return $this->returnError(422, 'sorry this is an error');
         }
     }
     public function changeStatus($id){
@@ -238,8 +243,7 @@ class NewsController extends Controller
             return $this->returnError(422, 'sorry this id not exists');
 
         }catch(\Exception $ex){
-            return $ex;
-            //return $this->returnError(422, 'sorry this is an error');
+            return $this->returnError(422, 'sorry this is an error');
 
         }
     }

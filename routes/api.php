@@ -91,9 +91,56 @@ Route::group(['namespace'=>'App\Http\Controllers'], function(){
         Route::get('getAllNewsImages/{id}', 'NewsimagesController@getAll');
         ################### end newsImages #############
         
-
     });
+    ################# start Initiatives #########################
+    Route::group(['namespace' => 'Initiative'], function(){
+       Route::group(['middleware' => 'auth:api'], function(){
+        Route::post('create-initiative', 'InitiativeController@store');
+        Route::post('update-initiative/{id}', 'InitiativeController@update');
+        Route::post('delete-initiative/{id}', 'InitiativeController@destroy');
+       });
+       
+       Route::get('getOne-initiative/{id}', 'InitiativeController@getOne');
+       Route::get('getAll-initiative', 'InitiativeController@getAll');
+    });
+    #################### end Initiatives #######################
+        ################# start government #########################
+        Route::group(['namespace' => 'Governments'], function(){
+            Route::group(['middleware' => 'auth:api'], function(){
+            ############### start government into Governments ###########
+             Route::post('create-government', 'GovernmentController@store');
+             Route::post('changeReqStatus-government/{id}', 'GovernmentController@changeReqStatus');
+             Route::post('update-government/{id}', 'GovernmentController@update');
+             Route::post('delete-government/{id}', 'GovernmentController@destroy');
+            ############### end government into Governments ###########
+            ############### start hierarchical into Governments ###########
+            Route::post('create-hierarchical', 'HierarchicalControlller@store');
+            Route::post('update-hierarchical/{id}', 'HierarchicalControlller@update');
+            Route::post('delete-hierarchical/{id}', 'HierarchicalControlller@destroy');
+            ############### end hierarchical into Governments ###########
+            ############### start employee into Governments ###########
+            Route::post('create-employee', 'EmployeeController@store');
+            Route::post('update-employee/{id}', 'EmployeeController@update');
+            Route::post('delete-employee/{id}', 'EmployeeController@destroy');
+            ############### end employee into Governments ###########
 
+            });
+            ############### start government into Governments ###########
+            Route::get('getOne-government/{id}', 'GovernmentController@getOne');
+            Route::get('getAll-governments', 'GovernmentController@getAll');
+            ############### end government into Governments ###########
+
+            ############### start hierarchical into Governments ###########
+            Route::get('getAll-hierarchical', 'HierarchicalControlller@getAll');
+            ############### end hierarchical into Governments ###########
+            ############### start employee into Governments ###########
+            Route::get('getAll-employee', 'EmployeeController@getAll');
+            Route::get('getOne-employee/{id}', 'EmployeeController@getOne');
+            ############### end employee into Governments ###########
+
+
+         });
+         #################### end government #######################
     
 });
 
