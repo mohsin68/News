@@ -13,27 +13,27 @@ trait AllTrait
         return $file_name;
     }
 
-    public function returnError($status="", $msg='',$key=null ,$value=null){
+    public function returnError($status="500", $msg='',$key=null ,$value=null){
         return response()->json([
             'status' => $status,
             'message' => $msg,
             $key => $value
             
-        ]);
+        ], $status);
     }
     public function returnSuccess($status="200", $msg='', $key = null, $data= null){
         return response()->json([
             'status' => $status,
             'message' => $msg,
             $key => $data
-        ]);
+        ], $status);
     }
     public function returnData($status="200", $msg='' ,$value=null){
         return response()->json([
             'status' => $status,
             'message' => $msg,
             'data' => $value
-        ]);
+        ], $status);
     }
     protected function createNewToken($token, $status=201, $msg=''){
         return response()->json([
@@ -42,7 +42,7 @@ trait AllTrait
             'access_token' => $token,
             'expires_in' => auth()->factory()->getTTL() * 60,
             'user' => auth()->user()
-        ]);
+        ], $status);
     }
 
 }
