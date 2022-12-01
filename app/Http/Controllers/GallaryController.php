@@ -32,7 +32,7 @@ class GallaryController extends Controller
                     $file_name = uniqid('', true) . '.' . $file_extentions;
                     $src->move("gallary", $file_name);
                     Gallary::create([
-                        'name' => $file_name
+                        'name' => base_path('public\gallary\\' . $file_name)
                     ]);
                 }
                 return $this->returnSuccess(200, 'photo is added succssfuly' );
@@ -64,7 +64,6 @@ class GallaryController extends Controller
             if($gallary){
                 //delete from folder
             $image = Str::afterLast($gallary->name, 'assets/');
-            $image = base_path('public\gallary'. '\\' . $image);
             unlink($image); //delete photo from folder
             //delete from database
             $gallary->delete();

@@ -26,7 +26,8 @@ class FounderController extends Controller
             Founder::create([
                 'name' => $request->name,
                 'desc' => $request->desc,
-                'img' => $file_path
+                'img' => base_path('public\founders\\' . $file_path)
+                
             ]);
             return $this->returnSuccess(200, 'this founder is added succssfuly' );
 
@@ -51,7 +52,6 @@ class FounderController extends Controller
             if($founder){
                 //delete from file
             $image = Str::afterLast($founder->img, 'assets/');
-            $image = base_path('public\founders'. '\\' . $image);
             unlink($image); //delete photo from folder
             //delete from database
             $founder->delete();

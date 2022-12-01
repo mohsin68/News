@@ -31,7 +31,8 @@ class VideoContoller extends Controller
                     $file_name = uniqid('', true) . '.' . $file_extentions;
                     $src->move("video", $file_name);
                     Video::create([
-                        'name' => $file_name
+                        'name' => base_path('public\video\\' . $file_name)
+                        
                     ]);
                 }
                 return $this->returnSuccess(200, 'video is added succssfuly' );
