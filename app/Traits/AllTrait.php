@@ -13,7 +13,7 @@ trait AllTrait
         return $file_name;
     }
 
-    public function returnError($status="500", $msg='',$key=null ,$value=null){
+    public function returnError($status=500, $msg='',$key=null ,$value=null){
         return response()->json([
             'status' => $status,
             'message' => $msg,
@@ -21,14 +21,14 @@ trait AllTrait
             
         ], $status);
     }
-    public function returnSuccess($status="200", $msg='', $key = null, $data= null){
+    public function returnSuccess($status=200, $msg='', $key = null, $data= null){
         return response()->json([
             'status' => $status,
             'message' => $msg,
             $key => $data
         ], $status);
     }
-    public function returnData($status="200", $msg='' ,$value=null){
+    public function returnData($status=200, $msg='' ,$value=null){
         return response()->json([
             'status' => $status,
             'message' => $msg,
