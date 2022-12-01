@@ -32,7 +32,8 @@ class NewsimagesController extends Controller
                     $file_name = uniqid('', true) . '.' . $file_extentions;
                     $src->move("newsimages", $file_name);
                     Newsimage::create([
-                        'name' => $file_name,
+                        'name' => base_path('public\newsimages\\' . $file_name),
+                        
                     ]);
                     //get count of data in input name
                     $lastImgAdded=count($request->name);
@@ -80,7 +81,6 @@ class NewsimagesController extends Controller
             if($newsimg){
                 //delete from file
             $image = Str::afterLast($newsimg->name, 'assets/');
-            $image = base_path('public\newsimages'. '\\' . $image);
             unlink($image); //delete photo from folder
             //delete from database
             $newsimg->delete();
