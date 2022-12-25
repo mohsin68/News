@@ -38,6 +38,28 @@ Route::group(['namespace'=>'App\Http\Controllers'], function(){
         Route::post('creategovernorate', 'GovernorateController@store');
         Route::post('removegovernorate/{id}', 'GovernorateController@destroy');
         ################### end Governorate #############
+        #################start folder ##############
+        Route::post('createFolder', 'FolderController@store');
+        Route::post('updateFolder/{id}', 'FolderController@update');
+        Route::post('deleteFolder/{id}', 'FolderController@destroy');
+        ################### end folder #############
+        #################start question ##############
+        Route::post('createQuestion', 'QuestionController@store');
+        Route::post('updateQuestion/{id}', 'QuestionController@update');
+        Route::post('deleteQuestion/{id}', 'QuestionController@destroy');
+        ################### end question #############
+        #################start answer ##############
+        Route::post('createAnswer', 'AnswerController@store');
+        Route::post('updateAnswer/{id}', 'AnswerController@update');
+        Route::post('changeStatus/{id}', 'AnswerController@changeStatus');
+        Route::post('deleteAnswer/{id}', 'AnswerController@destroy');
+        ################### end answer #############
+        #################start exam ##############
+        Route::post('createExam', 'ExamController@store');
+        Route::post('updateExam/{id}', 'ExamController@update');
+        Route::post('deleteExam/{id}', 'ExamController@destroy');
+        ################### end exam #############
+        
         });
     ############## start gallary ###############
     Route::get('getallgallary', 'GallaryController@getAllGallary');
@@ -48,6 +70,21 @@ Route::group(['namespace'=>'App\Http\Controllers'], function(){
     #################start founder ##############
     Route::get('getallfounder', 'FounderController@getAllFounder');
     ################### end founder #############
+    #################start folder ##############
+    Route::get('getallfolders', 'FolderController@getAllFolders');
+    Route::get('getaOneFolder/{id}', 'FolderController@getOneFolder');
+    ################### end folder #############
+    #################start exam ##############
+    Route::get('getallExams', 'ExamController@getAllExams');
+    Route::get('getaOneExam/{id}', 'ExamController@getOneExam');
+    ################### end exam #############
+    #################start question ##############
+    Route::get('getallquestions', 'QuestionController@getAllQuestions');
+    Route::get('getaOnequestion/{id}', 'QuestionController@getOneQuestion');
+    ################### end question #############
+    #################start answer ##############
+    Route::get('getAnswersAboutQuestion/{id}', 'AnswerController@getAllAnswerswithquestion');
+    ################### end answer #############
     #################start Governorate ##############
     Route::get('getallgovernorate', 'GovernorateController@getAll');
     ################### end Governorate #############
