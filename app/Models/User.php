@@ -41,6 +41,9 @@ class User extends Authenticatable implements JWTSubject
     public function news(){
         return $this->hasMany('App\Models\News', 'user_id', 'id');
     }
+    public function userExams(){
+        return $this->hasMany('App\Models\ExamUser', 'user_id', 'id');
+    }
     //end relations
     /**
      * The attributes that should be cast.

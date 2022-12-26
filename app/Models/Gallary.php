@@ -12,6 +12,7 @@ class Gallary extends Model
         'id',
         'name',
         'employee_id',
+        'folder_id',
         'created_at',
         'updated_at'
     ];
@@ -19,8 +20,15 @@ class Gallary extends Model
         'created_at',
         'updated_at'
     ];
+    public function getNameAttribute(){
+        return base_path('public\gallary\\' .$this->attributes['name']); 
+    }
     // relations
     public function employee(){
         return $this->belongsTo('App\Models\Employee', 'employee_id', 'id');
     }
+    public function folder(){
+        return $this->belongsTo('App\Models\Folder', 'folder_id', 'id');
+    }
+    
 }

@@ -18,6 +18,9 @@ class Newsimage extends Model
         'created_at',
         'updated_at'
     ];
+    public function getNameAttribute(){
+        return base_path('public\newsimages\\' .$this->attributes['name']); 
+    }
     //relations
     public function idImages(){
         return $this->hasOne('App\Models\Idimage', 'id_image', 'id');
