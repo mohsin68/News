@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Traits\AllTrait;
 use App\Models\Exam;
+use App\Models\ExamUser;
 use App\Models\Question;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class ExamController extends Controller
 {
@@ -27,22 +30,25 @@ class ExamController extends Controller
             if ($validator->fails()) {
                 return $this->returnError(422, 'sorry this is an error', 'Error', $validator->errors());
             }
+
             Exam::create([
                 'name' => $request->name,
                 'appointment_time' =>  $request->appointment_time,
                 'appointment' => $request->appointment,
                 'time' => $request->time . " hours",
             ]);
+            $lastNewExam = Exam::select('id')->latest('id')->first();
             $users = $request->user_id;
             foreach ($users as $user){
-                Exam::create([
+                ExamUser::create([
                     'user_id' => $user,
+                    'exam_id' => $lastNewExam->id
                 ]);
             }
+
             return $this->returnSuccess(200, 'this Exam is added succssfuly' );
 
         }catch(\Exception $ex){
-            return $ex;
             return $this->returnError(422, 'sorry this is an error');
         }
 
@@ -60,7 +66,7 @@ class ExamController extends Controller
                 'appointment_time' => 'required|date_format:"H:i',
                 'appointment' => "required|after:date('Y-m-d')",
                 'time' => 'required|integer|min:1|max:24',
-                'user_id' => 'required|integer'
+
             ]);
             if ($validator->fails()) {
                 return $this->returnError(422, 'sorry this is an error in validation', 'Error', $validator->errors());
@@ -71,12 +77,30 @@ class ExamController extends Controller
                 'appointment_time' =>  $request->appointment_time,
                 'appointment' => $request->appointment,
                 'time' => $request->time . " hours",
-                'user_id' => $request->user_id
             ]);
+            $examUser = ExamUser::select('user_id')->where('exam_id', $exam->id)->get();
+            $examUserAll = json_decode($examUser, true);
+            foreach($examUserAll as $one){
+                $users = $request->user_id;
 
-            return $this->returnSuccess(200, 'this exam is updated succssfuly' );
+                if (is_array($users) || is_object($users)){
+                    foreach ($users as $user){
+                        if(($user == $one['user_id'])){
+                            return $this->returnError(422, 'sorry this is exists');
+                        }
+                        ExamUser::create([
+                            'user_id' => $user,
+                            'exam_id' => $id
+                        ]);
+    
+                    }
+                }
+            }
+            return $this->returnSuccess(200, 'this exam is updated succssfuly');
 
         }catch(\Exception $ex){
+            return $ex;
+
             return $this->returnError(422, 'sorry this is an error');
         }
     }
@@ -104,15 +128,39 @@ class ExamController extends Controller
         }
 
     }
+    public function getOneExamWithUsers($id){
+        try{
+            //find exam
+            $exam = Exam::with(['examUsers' => function($q){
+                $q->select('user_id', 'exam_id')->get();
+            }])->find($id);
+            if(! $exam){
+                return $this->returnError(422, 'sorry this is not exists');
+            }
+            return $this->returnData(200, 'there is exam with his all users in this', $exam);
+        }
+        catch(\Exception $ex){
+            return $this->returnError(422, 'sorry this is an error');
+        }
+
+    }
+    public function getUserWithHisExams($id){
+        try{
+            $user = User::with('userExams.examUsers')->find($id);
+            if(! $user){
+                return $this->returnError(422, 'sorry this is not exists');
+            }
+            return $this->returnData(200, 'there is user with his Exams', $user);
+
+        }catch(\Exception $ex){
+            return $this->returnError(422, 'sorry this is an error');
+        }
+    }
     public function destroy($id){
         try{
             $exam = Exam::find($id);
             if($exam){
-                // foreach($exam->questions() as $question){
-                    
-                //     $question->answer()->delete();
-                // }
-            $exam->with(['questions.answer'])->delete();
+
             $exam->questions()->delete();
             //delete exam from database
             $exam->delete();
@@ -122,7 +170,6 @@ class ExamController extends Controller
             return $this->returnError(422, 'sorry this id not exists');
 
         }catch(\Exception $ex){
-            return $ex;
             return $this->returnError(422, 'sorry this is an error');
 
         }

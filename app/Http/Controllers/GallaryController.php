@@ -17,7 +17,8 @@ class GallaryController extends Controller
             //validation
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
-                'name.*' => 'image|mimes:jpeg,png,jpg,gif,svg'
+                'name.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
+                'folder_id' => 'required|integer',
             ]);
      
             if ($validator->fails()) {
@@ -32,9 +33,12 @@ class GallaryController extends Controller
                     $file_name = uniqid('', true) . '.' . $file_extentions;
                     $src->move("gallary", $file_name);
                     Gallary::create([
-                        'name' => base_path('public\gallary\\' . $file_name)
+                        'name' => $file_name,
+                        'folder_id' => $request->folder_id
+
                     ]);
                 }
+
                 return $this->returnSuccess(200, 'photo is added succssfuly' );
 
 

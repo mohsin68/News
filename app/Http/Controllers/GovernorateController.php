@@ -14,7 +14,7 @@ class GovernorateController extends Controller
         try{
             //validation
             $validator = Validator::make($request->all(), [
-                'name' => 'required|max:191',
+                'name' => 'required|max:191|unique:governorates',
             ]);
 
             if ($validator->fails()) {

@@ -26,7 +26,7 @@ class FounderController extends Controller
             Founder::create([
                 'name' => $request->name,
                 'desc' => $request->desc,
-                'img' => base_path('public\founders\\' . $file_path)
+                'img' => $file_path
                 
             ]);
             return $this->returnSuccess(200, 'this founder is added succssfuly' );
