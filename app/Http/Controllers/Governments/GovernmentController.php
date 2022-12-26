@@ -15,7 +15,7 @@ class GovernmentController extends Controller
         try{
             //validate request
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:191',
+                'name' => 'required|string|max:191|unique:governments',
                 'registration_status' => 'boolean|required',
             ]);
             if ($validator->fails()) {

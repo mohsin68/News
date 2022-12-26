@@ -20,7 +20,8 @@ class EmployeeController extends Controller
             //validate request
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:191',
-                'img' => 'image|mimes:jpeg,png,jpg,gif,svg',
+                'img' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+                'folder_id' => 'required|integer',
                 'government_id' => 'required|integer|max:11',
                 'hierarchical_id' => 'required|integer|max:11'
             ]);
@@ -41,11 +42,13 @@ class EmployeeController extends Controller
             $lastNewOfEmployee = Employee::select('id')->latest('id')->first();
             Gallary::create([
                 'name' => $file_name,
+                'folder_id' => $request->folder_id,
                 'employee_id' => $lastNewOfEmployee->id,
             ]);
             return $this->returnSuccess(200, 'this Employee is added succssfuly' );
 
         }catch(\Exception $ex){
+            return $ex;
             return $this->returnError(422, 'sorry this is an error');
         }
     }
@@ -59,7 +62,8 @@ class EmployeeController extends Controller
             //validate request
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:191',
-                'img' => 'image|mimes:jpeg,png,jpg,gif,svg',
+                'img' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+                'folder_id' => 'required|integer',
                 'government_id' => 'required|integer|max:11',
                 'hierarchical_id' => 'required|integer|max:11'
             ]);
@@ -80,8 +84,18 @@ class EmployeeController extends Controller
                 $img = Gallary::select('*')->where('employee_id', $id)->first();
                 $img->update([
                     'name' => $file_name,
+                    'folder_id' => $request->folder_id,
                 ]);
             }
+            if($request->has('folder_id')){
+                $image = Gallary::select('*')->where('employee_id', $id)->first();
+                $image->update([
+                    'folder_id' => $request->folder_id,
+                ]);
+
+            }
+
+            
             return $this->returnSuccess(200, 'this employee is updated succssfuly' );
 
         }catch(\Exception $ex){
@@ -102,51 +116,15 @@ class EmployeeController extends Controller
     }
     public function getOne($id){
         try{
-            /*$employee = Employee::find($id);
+            $employee = Employee::with('gallary')->find($id);
             if(! $employee){
-                return $this->returnError(422, 'sorry this id not exists');
-            }   
-            //$getOneEmployee = $employee->with(['gallary', 'hierarchical'])->select("*")->first();
-            $getValueOfParent = $employee->hierarchical->parent;
-            if($getValueOfParent == null){
-                $getEmployeeWithChilds = $employee->with('hierarchical')->where( 'hierarchical_id', '>=', 1)->orderBy('hierarchical_id')->paginate(PAGINATION_COUNT);
-                return $this->returnData(200, 'this is  employee', $getEmployeeWithChilds);
+                return $this->returnError(422, 'sorry this is not exists');
             }
-            $getEmployeeWithChilds2 = $employee->with('hierarchical')->where( 'hierarchical_id', '>', $getValueOfParent)->orderBy('hierarchical_id')->paginate(PAGINATION_COUNT);
-            return $this->returnData(200, 'this is  employee', $getEmployeeWithChilds2);*/
-            return Hierarchical::with('children')->withDepth()->get()->toFlatTree();
-            // $new = "WITH RECURSIVE tree_view AS (
-            //     SELECT id,
-            //          parent,
-            //          position,
-            //          0 AS level,
-            //          CAST(id AS varchar(50)) AS order_sequence
-            //     FROM hierarchical_structure
-            //     WHERE parent IS NULL
-                 
-            // UNION ALL
-             
-            //     SELECT parent.id,
-            //          parent.parent,
-            //          parent.position,
-            //          level + 1 AS level,
-            //          CAST(order_sequence || '_' || CAST(parent.id AS VARCHAR (50)) AS VARCHAR(50)) AS order_sequence
-            //     FROM hierarchical_structure parent
-            //     JOIN tree_view tv
-            //       ON parent.parent = tv.id
-            // )
-             
-            // SELECT
-            //    RIGHT('------------',level*3) || position 
-            //      AS parent_child_tree
-            // FROM tree_view
-            // ORDER BY order_sequence";
-            //return $result= DB::select(DB::raw($new));
-            
+            return $this->returnData(200, 'there is employee', $employee);
+
 
 
         }catch(\Exception $ex){
-            return $ex;
             return $this->returnError(422, 'sorry this is an error');
         }
     }
@@ -159,11 +137,14 @@ class EmployeeController extends Controller
             if($employee){
                 //delete from folder
                 $img = Gallary::select('*')->where('employee_id', $id)->first();
-                $image = Str::afterLast($img->name, 'assets/');
-                $image = base_path('public\gallary'. '\\' . $image);
-                unlink($image); //delete photo from folder
-                //delete img from table gallary
-                $employee->gallary()->delete();
+                if($img != null){
+                    $image = Str::afterLast($img['name'], 'assets/');
+                    unlink($image); //delete photo from folder
+                    //delete img from table gallary
+                    $employee->gallary()->delete();
+                }
+
+
                 //delete from database
                 $employee->delete();
                 return $this->returnSuccess(200, 'This employee successfuly Deleted');
@@ -172,6 +153,7 @@ class EmployeeController extends Controller
             return $this->returnError(422, 'sorry this id not exists');
 
         }catch(\Exception $ex){
+            return $ex;
             return $this->returnError(422, 'sorry this is an error');
 
         }
