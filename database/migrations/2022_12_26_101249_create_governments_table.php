@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExamsTable extends Migration
+class CreateGovernmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateExamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('exams', function (Blueprint $table) {
+        Schema::create('governments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('appointment');
-            $table->time('appointment_time');
-            $table->string('time');
+            $table->boolean('registration_status')->default(0)->comment('0=>non register(false) 1=>can register(true) ');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateExamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exams');
+        Schema::dropIfExists('governments');
     }
 }
