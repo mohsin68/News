@@ -77,6 +77,8 @@ Route::group(['namespace'=>'App\Http\Controllers'], function(){
     #################start exam ##############
     Route::get('getallExams', 'ExamController@getAllExams');
     Route::get('getaOneExam/{id}', 'ExamController@getOneExam');
+    Route::get('getaOneExamWithUser/{id}', 'ExamController@getOneExamWithUsers');
+    Route::get('getUserWithHisExams/{id}', 'ExamController@getUserWithHisExams');
     ################### end exam #############
     #################start question ##############
     Route::get('getallquestions', 'QuestionController@getAllQuestions');
