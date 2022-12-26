@@ -73,6 +73,8 @@ class NewsController extends Controller
             return $this->returnSuccess(200, 'this News is added succssfuly' );
 
         }catch(\Exception $ex){
+            return $ex;
+
             return $this->returnError(422, 'sorry this is an error');
         }
     }

@@ -32,7 +32,7 @@ class NewsimagesController extends Controller
                     $file_name = uniqid('', true) . '.' . $file_extentions;
                     $src->move("newsimages", $file_name);
                     Newsimage::create([
-                        'name' => base_path('public\newsimages\\' . $file_name),
+                        'name' =>  $file_name,
                         
                     ]);
                     //get count of data in input name
