@@ -21,7 +21,7 @@ class Gallary extends Model
         'updated_at'
     ];
     public function getNameAttribute(){
-        return asset('gallary/' . $this->attributes['img']);
+        return asset('gallary/' . $this->attributes['name']);
     }
     // relations
     public function employee(){
